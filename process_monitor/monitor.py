@@ -6,9 +6,9 @@ import resource
 import subprocess
 
 def monitor_process_psutil(executable_path: str, second_interval: int) -> List[Tuple[float, int, int]]:
-    """Monitor process each interval while its running"""
+    """Monitor process each interval while its running leveraging psutil library."""
     
-    import psutil
+    import psutil # import only here
 
     data = []
     try:
@@ -30,6 +30,10 @@ def monitor_process_psutil(executable_path: str, second_interval: int) -> List[T
     return data
 
 def monitor_process_standard(executable_path: str, second_interval: int) -> List[Tuple[float, int, int]]:
+    """Monitor process using only standard library.
+    
+    Note: on windows file handles are set to 0 (CURRENTLY NOT SUPPORTED)
+    """
     
     data = []
     start_time = time.time()
@@ -56,7 +60,7 @@ def monitor_process_standard(executable_path: str, second_interval: int) -> List
                     # https://github.com/giampaolo/psutil/blob/master/psutil/_psutil_windows.c
                     # we could copy code from here but whats the point when not using psutil?
                     # I just hate Windows, why this cant be easy?
-                    # We could also leverage https://learn.microsoft.com/en-us/sysinternals/downloads/handle
+                    # We could also somehow leverage https://learn.microsoft.com/en-us/sysinternals/downloads/handle
                     # but that doesnt have to be always installed afaik
                     print("Warning: counting file handles for Windows not implemented. By default 0")
                 else:
